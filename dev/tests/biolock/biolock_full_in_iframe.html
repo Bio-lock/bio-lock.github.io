@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello on Biolock</title>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, Roboto, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1><div>Test Biolock in iFrame</div></h1>
+    
+    <!-- Div to display received messages in a table -->
+    <div id="messages" style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+        <h2>Messages from Biolock:</h2>
+        <table id="messagesTable" border="1" style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Type</th>
+                    <th>Message JSON</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- New rows will be added here -->
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Iframe with the ability to change the source using a URL parameter -->
+    <iframe 
+        id="myIframe"
+        src="https://dev.biolock.ai/landing" 
+        width="500" 
+        height="500"
+        allow="camera;"
+        style="border: 1px solid #ccc;">
+    </iframe>
+
+    <script>
+        // Retrieve the 'iframe_src' URL parameter to change the iframe source
+        const urlParams = new URLSearchParams(window.location.search);
+        const iframeSrcParam = urlParams.get('iframe_src');
+        if (iframeSrcParam) {
+            document.getElementById('myIframe').src = iframeSrcParam;
+        }
+
+        let messageCount = 0; // counter for numbering messages
+
+        // Function to add a message to the table
+        function addMessage(message) {
+            messageCount++;
+            const tableBody = document.getElementById('messagesTable').getElementsByTagName('tbody')[0];
+            const newRow = document.createElement('tr');
+            
+            // Column for message order number
+            const numCell = document.createElement('td');
+            numCell.textContent = messageCount;
+            newRow.appendChild(numCell);
+
+            // Column for message type
+            const typeCell = document.createElement('td');
+            // If messageType does not exist, display "N/A"
+            typeCell.textContent = message.messageType || "N/A";
+            newRow.appendChild(typeCell);
+
+            // Column for JSON message
+            const jsonCell = document.createElement('td');
+            jsonCell.textContent = JSON.stringify(message, null, 2);
+            newRow.appendChild(jsonCell);
+
+            tableBody.appendChild(newRow);
+        }
+
+        // Listen for messages from the iframe
+        window.addEventListener('message', function(event) {
+            // Check that the message origin contains "biolock"
+            if (event.data.source.includes("biolock")) {
+                addMessage(event.data);
+            }
+        });
+    </script>
+</body>
+</html>
