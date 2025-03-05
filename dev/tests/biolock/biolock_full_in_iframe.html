@@ -30,7 +30,7 @@
     
     <!-- Iframe with the ability to change the source using a URL parameter -->
     <iframe 
-        id="myIframe"
+        id="BiolockIframe"
         src="" 
         width="1000" 
         height="1000"
@@ -43,7 +43,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const iframeSrcParam = urlParams.get('iframe_src');
         if (iframeSrcParam) {
-            document.getElementById('myIframe').src = iframeSrcParam;
+            document.getElementById('BiolockIframe').src = iframeSrcParam;
         }
 
         let messageCount = 0; // counter for numbering messages
