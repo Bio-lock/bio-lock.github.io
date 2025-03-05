@@ -46,6 +46,14 @@
             document.getElementById('BiolockIframe').src = iframeSrcParam;
         }
 
+        // Retrieve the 'ignore_types' URL parameter for filtering specific message types
+        const ignoreTypesParam = urlParams.get('ignore_types');
+        let ignoreTypes = [];
+        if (ignoreTypesParam) {
+            // Split the parameter value by commas into an array of message types to ignore
+            ignoreTypes = ignoreTypesParam.split(',').map(type => type.trim());
+        }
+
         let messageCount = 0; // counter for numbering messages
 
         // Function to add a message to the table
@@ -77,6 +85,10 @@
         window.addEventListener('message', function(event) {
             // Check that the message origin contains "biolock"
             if (event.data.source.includes("biolock")) {
+                // If the message has a messageType and it's in the ignore list, skip processing
+                if (event.data.messageType && ignoreTypes.includes(event.data.messageType)) {
+                    return;
+                }
                 addMessage(event.data);
             }
         });
