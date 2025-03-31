@@ -141,7 +141,7 @@
             }
             // Post the message to the iframe
             const iframe = document.getElementById('BiolockIFrame');
-            iframe.contentWindow.postMessage({source:'parent', messageType:messageType, jsonMessage:messageObj}, '*');
+            iframe.contentWindow.postMessage({source:'parent', messageType:messageType, json:messageObj}, '*');
         });
     </script>
 </body>
